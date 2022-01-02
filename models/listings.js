@@ -4,22 +4,22 @@ const Schema = mongoose.Schema; // Constructor function
 // === Creation of Schema ===
 
 // This is like the template for each listing
-const blogSchema = new Schema({
+const listSchema = new Schema({
         // Put an object here so we can have more properties like required and stuff
-        title: {type: String, required: true},
-        snippet: {
+        item: {type: String, required: true},
+        description: {
             type: String,
             required: true
         },
-        body: {
-            type:String,
+        price: {
+            type:Number,
             required: true
         }
     }, {timestamps:true})
 
 // === Creation of Model ===
 // This would refer to an instance of the blog 
-const Blog = mongoose.model('Blog',blogSchema);
+const Item = mongoose.model('Blog',listSchema);
 
 // We will call the shop as a class
-module.exports = Blog;
+module.exports = Item;

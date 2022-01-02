@@ -1,6 +1,7 @@
 // Importing relevant dependencies
 const express = require("express");
 const mongoose = require('mongoose');
+const pageRoutes = require('./routes/pages')
 
 
 // === Connection to relevant database === 
@@ -37,31 +38,40 @@ app.use(express.urlencoded({extended: true}))
 
 
 // === Routes ===
+// We can get it from the routes file
 
+const pages = require('./routes/pages')
+
+// Whenever the root is hit it will go to pages.js to see which route is being hit 
+app.use(pageRoutes);
 // Default route
-app.get("/",(req,res)=>{
-    res.send("hi");
+// app.get("/",(req,res)=>{
+//     res.render("index",{
+//         title: "Shopping List"
+//     });
 
-    // res.redirect('blogs')
-    // const blogs = [
-    //     // {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    //     // {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    //     // {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    //   ];
-    // // == Render view ==
-    // res.render('index',{title: 'Home',blogs})
 
-    // Similarly to vuejs, we can pass parameters to the ejs template. 
-    // similar parameter names can be used, and it is specific to each URL.
+
+//     // res.redirect('blogs')
+//     // const blogs = [
+//     //     // {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
+//     //     // {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
+//     //     // {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
+//     //   ];
+//     // // == Render view ==
+//     // res.render('index',{title: 'Home',blogs})
+
+//     // Similarly to vuejs, we can pass parameters to the ejs template. 
+//     // similar parameter names can be used, and it is specific to each URL.
 
     
-    // res.send
-    //   res.setHeader("Content-Type", "text/html")
-    // We don't have to do the typical 3 steps we have been  doing all along
-    // express will automatically detect the type. 
-    // res.send('<p>Home page</p>');
+//     // res.send
+//     //   res.setHeader("Content-Type", "text/html")
+//     // We don't have to do the typical 3 steps we have been  doing all along
+//     // express will automatically detect the type. 
+//     // res.send('<p>Home page</p>');
 
-    // res.sendFile('./views/index.html',{root: __dirname}) // In order to use relative URLs, root has to be specified.
+//     // res.sendFile('./views/index.html',{root: __dirname}) // In order to use relative URLs, root has to be specified.
 
-    // This is rather similar to what we have been doing. Importing the fs module and then reading the file
-})
+//     // This is rather similar to what we have been doing. Importing the fs module and then reading the file
+// })
