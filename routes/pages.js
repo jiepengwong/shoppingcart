@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Item = require('../models/listings');
 
 // Purpose of having a router is to make the code more modular, more readable in a sense
 
@@ -44,14 +45,31 @@ router.get("/",(req,res)=>{
 })
 
 // Listings route
-router.get("/listings",(req,res) =>{
-
+router.get("/create",(req,res) =>{
+    res.render("create",{title:"List your item"})
 })
 
 
-// Creations of shopping items route 
+// Owned items
+router.get("/own",(req,res) =>{
+    res.render("own",{title:"Item collection"})
+})
 
+// Posting request
+router.post("/",(req,res)=>{
+    // Since we are posting the data into the database, we have to create a new instance of it 
+    const item = new Item(req.body)
+    console.log(console.log(req.body));
 
+    // Saving it to the Database 
+
+    // Async request 
+    item.save()
+    .then(()=>{
+
+    })
+    .catc
+})
 
 
 

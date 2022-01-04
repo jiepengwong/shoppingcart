@@ -32,7 +32,7 @@ app.set('view engine','ejs');
 app.use(express.static('public'))
 // If we put styles.css inisde public folder, link tag should work to reference to the style.css file
 
-// Data parser, takes URL encoded data converts into an  object (Takes data from form object)
+// Data parser, takes URL encoded data converts into an  object (Takes data from form object)  This can be from forms
 app.use(express.urlencoded({extended: true}))
 
 

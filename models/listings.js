@@ -19,7 +19,9 @@ const listSchema = new Schema({
 
 // === Creation of Model ===
 // This would refer to an instance of the blog 
-const Item = mongoose.model('Blog',listSchema);
+const Item = mongoose.model('Shop',listSchema);
+// First argument here refers to the collection in the database collection
+// Second argument here refers to the structure. Schema is specified here to display the structure
 
 // We will call the shop as a class
 module.exports = Item;
