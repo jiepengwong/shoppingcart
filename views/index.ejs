@@ -38,7 +38,7 @@
                         <h3 class="title"><%= item.item %></h3>
                         <h3 class="title">$ <%= item.price %></h3>
                         <p><%=item.description %> </p>
-                        <button>Buy now</button>
+                        <a href="/details/<%=item._id%>">View more details</a>
                     </div>
                        
                 <% }) %>

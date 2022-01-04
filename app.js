@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const pageRoutes = require('./routes/pages')
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 
 // === Connection to relevant database === 

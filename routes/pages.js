@@ -1,6 +1,12 @@
+require("dotenv").config()
 const express = require("express");
 const router = express.Router();
 const Item = require('../models/listings');
+const bodyParser = require('body-parser')
+
+
+const Stripe = require('stripe');
+const stripe = Stripe('sk_test_51K5LIQJ2poMPNLhqOW4C1XifJeJlSbYgEWjiwaVIIRY6TZToZmSY7m2oN7n8Bx9AgT82MVlhv44ZfriRMF7fga1z00feB557vi');
 
 // Purpose of having a router is to make the code more modular, more readable in a sense
 
@@ -10,7 +16,9 @@ const Item = require('../models/listings');
 // Controllers establishes the link between the model and the view
 // View displays the pages
 
+// Stripe system setup
 
+var jsonParser = bodyParser.json()
 
 // Default route
 router.get("/",(req,res)=>{
@@ -24,32 +32,9 @@ router.get("/",(req,res)=>{
     .catch((error)=>{
 
     })
-
-
-
-    // res.redirect('blogs')
-    // const blogs = [
-    //     // {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    //     // {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    //     // {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    //   ];
-    // // == Render view ==
-    // res.render('index',{title: 'Home',blogs})
-
-    // Similarly to vuejs, we can pass parameters to the ejs template. 
-    // similar parameter names can be used, and it is specific to each URL.
-
-    
-    // res.send
-    //   res.setHeader("Content-Type", "text/html")
-    // We don't have to do the typical 3 steps we have been  doing all along
-    // express will automatically detect the type. 
-    // res.send('<p>Home page</p>');
-
-    // res.sendFile('./views/index.html',{root: __dirname}) // In order to use relative URLs, root has to be specified.
-
-    // This is rather similar to what we have been doing. Importing the fs module and then reading the file
 })
+
+
 
 // Listings route
 router.get("/create",(req,res) =>{
@@ -74,7 +59,7 @@ router.post("/",(req,res)=>{
     // Async request 
     item.save()
     .then((response)=>{
-        // Redirect it to the home page which is the all listings page 
+        // Redirect it to the home page which is the all listings page after submission
         res.redirect("/");
 
     })
@@ -84,8 +69,49 @@ router.post("/",(req,res)=>{
 })
 
 
+router.post("/create-checkout-session",jsonParser, async(req,res)=>{
+    console.log(req.body.items[0].price)
+   
+    try{
+
+        console.log("help")
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            mode: 'payment',
+            line_items:  [{
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                    name: req.body.items[0].item
+
+                    },
+                    unit_amount: req.body.items[0].price *1000  ,
+                },
+                quantity: 1
+            }],
+            success_url: `${process.env.SERVER_URL}/`,
+            cancel_url: `${process.env.SERVER_URL}/create`
 
 
+        })
+        res.json({ url: session.url })
+        
+    }
+    catch(e){
+        console.log(e);
+    }
+})
 
+router.get("/details/:id",(req,res)=>{
+    const id = req.params.id;
+    console.log(id)
+    Item.findById(id)
+    .then((response)=>{
+        res.render("details",{item:response, title: "Item Details"})
+    })
+    .catch((error)=>{
+        console.log(error.message)
+    })
+})
 // exporting the router to use in app.js
 module.exports = router;
