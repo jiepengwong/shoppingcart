@@ -14,9 +14,16 @@ const Item = require('../models/listings');
 
 // Default route
 router.get("/",(req,res)=>{
-    res.render("index",{
-        title: "Shopping List"
-    });
+   
+    // Item Model, find all documents in shops collections
+    Item.find()
+    .then((response)=>{
+        res.render("index",{title:"Item Listings", items: response})
+
+    })
+    .catch((error)=>{
+
+    })
 
 
 
@@ -59,16 +66,21 @@ router.get("/own",(req,res) =>{
 router.post("/",(req,res)=>{
     // Since we are posting the data into the database, we have to create a new instance of it 
     const item = new Item(req.body)
+    console.log(item);
     console.log(console.log(req.body));
 
     // Saving it to the Database 
 
     // Async request 
     item.save()
-    .then(()=>{
+    .then((response)=>{
+        // Redirect it to the home page which is the all listings page 
+        res.redirect("/");
 
     })
-    .catc
+    .catch((error)=>{
+        console.log(error);
+    })
 })
 
 

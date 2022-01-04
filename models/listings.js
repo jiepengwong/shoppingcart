@@ -7,14 +7,15 @@ const Schema = mongoose.Schema; // Constructor function
 const listSchema = new Schema({
         // Put an object here so we can have more properties like required and stuff
         item: {type: String, required: true},
+        price: {
+            type:Number,
+            required: true
+        },
         description: {
             type: String,
             required: true
         },
-        price: {
-            type:Number,
-            required: true
-        }
+      
     }, {timestamps:true})
 
 // === Creation of Model ===
