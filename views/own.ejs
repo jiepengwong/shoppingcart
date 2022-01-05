@@ -27,11 +27,82 @@
         </nav>
         <!-- Page content-->
         <div class="container">
-         
+        <% if( items.length > 0) {%>
+            <h1 class="my-5">Summary Page</h1>
+
+            <table class="table">
+                <tr>
+                    <th>
+                        Item name
+                    </th>
+                    <th>Price ($)</th>
+                </tr>
+            
+                <% items.forEach(item =>{ %>  
+                <tr>
+                    <td><%= item.item%></td>
+                    <td><%= item.price%></td>
+                </tr>
+
+                <% }) %>
+
+            
+
+            <tr>
+                <td>Total Price:</td>
+                <td><%= price %></td>
+            </tr>
+            </table>
+            <button class="btn btn-primary" id="payment">Payment</button>
+            
+            <% }else{ %>
+                <div class="text-center">
+
+                    <h1 class="my-5 text-center">You didn't add anything to your cart :((((</h1>
+                </div>
+            <% }%>
         </div>
+
+        
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         
         <!-- Core theme JS-->
+        <script>
+            // Script will only run on the front-end part
+    
+            // Converting EJS into a valid javascript object (Stack Overflowed this , perhaps there could be a better way to do this)
+    
+            const payment = document.getElementById("payment");
+            console.log(payment);
+    
+            payment.addEventListener("click", () => {
+              // Convert EJS to javascript object
+              var itemObject = `<%- JSON.stringify(items) %>`;
+              var fullPrice = `<%- JSON.stringify(price) %>`;
+
+              itemObject = JSON.parse(itemObject);
+              fetch("/create-checkout-session", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  items: itemObject,
+                  price : fullPrice
+                }),
+              })
+            .then(res => {
+            if (res.ok) return res.json()
+            return res.json().then(json => Promise.reject(json))
+            })
+            .then(({ url }) => {
+                window.location = url
+            })
+            .catch(e => {
+                console.error(e.error)
+            })
+                });
+        </script>
     </body>
 </html>

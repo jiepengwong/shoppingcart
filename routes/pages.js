@@ -2,6 +2,7 @@ require("dotenv").config()
 const express = require("express");
 const router = express.Router();
 const Item = require('../models/listings');
+const Cart =  require('../models/cart')
 const bodyParser = require('body-parser')
 
 
@@ -42,10 +43,7 @@ router.get("/create",(req,res) =>{
 })
 
 
-// Owned items
-router.get("/own",(req,res) =>{
-    res.render("own",{title:"Item collection"})
-})
+
 
 // Posting request
 router.post("/",(req,res)=>{
@@ -68,9 +66,57 @@ router.post("/",(req,res)=>{
     })
 })
 
+// Adding to cart 
+// Data is saved to the back end
+router.post("/add-to-cart", (req,res)=>{
+    console.log(req.body);      
+    const addCart =  Item.findById(req.body.id)
+    .then((response)=>{
+        console.log("hi")
+        console.log(response);
+        console.log("hi")
+        Cart.save(response)
+        console.log(Cart.getCart());
+        res.end("saved ")
+
+    })
+
+   
+
+})
+
+router.get("/own",(req,res)=>{
+    console.log("get all cart here")
+    var itemSelected = Cart.getCart(); //array 
+
+    if (itemSelected != null){
+        var bunchItem = itemSelected.items
+    var price = itemSelected.totalPrice
+    console.log(itemSelected.items)
+
+    res.render("own",{title: "Checkcout", items: bunchItem, price})
+
+    }
+    else{
+
+        res.render("own",{title: "Checkcout", items: [], price: 0 })
+
+    }
+    
+
+
+
+    
+
+})
+
+
+//
+// need to specify jsonParser to convert into object, as specified in stackoverflow
 
 router.post("/create-checkout-session",jsonParser, async(req,res)=>{
-    console.log(req.body.items[0].price)
+    console.log(req.body.items);
+    console.log(req.body.price)
    
     try{
 
@@ -78,22 +124,27 @@ router.post("/create-checkout-session",jsonParser, async(req,res)=>{
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: 'payment',
-            line_items:  [{
-                price_data: {
-                    currency: "usd",
-                    product_data: {
-                    name: req.body.items[0].item
+            line_items: req.body.items.map(item=>{
+                return {
 
+                    price_data: {
+                        currency: "usd",
+                        product_data: {
+                        name: item.item
+    
+                        },
+                        unit_amount: item.price * 100 , //Price in Stripe system is in cents, so we have to x100 here
                     },
-                    unit_amount: req.body.items[0].price *1000  ,
-                },
-                quantity: 1
-            }],
-            success_url: `${process.env.SERVER_URL}/`,
+                    quantity: 1
+                }
+            }),
+            success_url: `${process.env.SERVER_URL}/own`,
             cancel_url: `${process.env.SERVER_URL}/create`
 
 
         })
+        console.log("i am executed here ")
+        // Delete from database once a successful payment is made 
         res.json({ url: session.url })
         
     }

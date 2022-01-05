@@ -50,6 +50,9 @@
     </nav>
     <!-- Page content-->
     <div class="container">
+
+    
+
       <div class="details content">
         <h1><%= item.item%></h1>
         <h2>$ <%= item.price%></h2>
@@ -70,6 +73,7 @@
         console.log(payment);
 
         payment.addEventListener("click", () => {
+          // Convert EJS to javascript object
           var itemObject = `<%- JSON.stringify(item) %>`;
           itemObject = JSON.parse(itemObject);
           fetch("/create-checkout-session", {
