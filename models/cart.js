@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
 var cart = null;// === Creation of Schema ===
 
 module.exports = class Cart {
+    // What is a static? Static basically allow the model Cart to invoke directly the method. In this case it would be save(item) and getCart()
     static save(item){
        
         if (cart) { // If there is something in the cart

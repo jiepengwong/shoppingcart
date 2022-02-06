@@ -17,8 +17,8 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" aria-current="page" href="/own">Owned Items</a></li>
                         <li class="nav-item"><a class="nav-link" href="/create">Create Listing</a></li>
+                        <li class="nav-item"><a class="nav-link" aria-current="page" href="/own">Checkout</a></li>
 
                      
                     </ul>
@@ -76,32 +76,74 @@
             const payment = document.getElementById("payment");
             console.log(payment);
     
-            payment.addEventListener("click", () => {
+            payment.addEventListener("click", async () => {
               // Convert EJS to javascript object
               var itemObject = `<%- JSON.stringify(items) %>`;
               var fullPrice = `<%- JSON.stringify(price) %>`;
 
               itemObject = JSON.parse(itemObject);
-              fetch("/create-checkout-session", {
+
+            // Creating a post request using fetch api
+            const options = {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
+                body: JSON.stringify({ //Convert into JSON object
                   items: itemObject,
                   price : fullPrice
-                }),
-              })
-            .then(res => {
-            if (res.ok) return res.json()
-            return res.json().then(json => Promise.reject(json))
-            })
-            .then(({ url }) => {
-                window.location = url
-            })
-            .catch(e => {
-                console.error(e.error)
-            })
+                })
+            }
+
+            try{
+                console.log("hi i am being first ran at the front end side")
+                const res = await fetch("/create-checkout-session",options)
+
+                console.log("got back response from back-end")
+
+                const result = await res.json()
+
+                if (res.ok) {
+                    console.log(res)
+                    console.log(result)
+                    window.location.href = result.url
+
+                } else{
+                    console.log(res)
+                }
+            }
+
+            catch{
+
+                console.log("there is an error")
+
+            }
+
+
+            
+
+            
+            //   Fetching from the back end server
+            //   fetch("/create-checkout-session", {
+            //     method: "POST",
+            //     headers: {
+            //       "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //       items: itemObject,
+            //       price : fullPrice
+            //     }),
+            //   })
+            // .then(res => {
+            // if (res.ok) return res.json()
+            // return res.json().then(json => Promise.reject(json))
+            // })
+            // .then(({ url }) => {
+            //     window.location = url
+            // })
+            // .catch(e => {
+            //     console.error(e.error)
+            // })
                 });
         </script>
     </body>

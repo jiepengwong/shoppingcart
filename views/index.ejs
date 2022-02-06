@@ -45,7 +45,7 @@
 
                                     <form action="/add-to-cart" method="POST">
                                         <input type="hidden" name="id" value="<%=item._id%>">
-                                        <button type="submit" class="btn btn-primary">Add to cart</button>
+                                        <button onclick="alertPrompt()" type="submit" class="btn btn-primary">Add to cart</button>
                                     </form>
                                     <a href="/details/<%=item._id%>">View more details</a>
                                 </div>
@@ -74,5 +74,12 @@
         
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+
+
+        <script>
+            function alertPrompt(){
+                alert("Added to cart!")
+            }
+        </script>
     </body>
 </html>

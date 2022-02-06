@@ -27,11 +27,11 @@ app.set('view engine','ejs');
 // express and ejs will look in the views folder, this is the default, tentatively we can set our own folder where we will keep our view.
 
 
-// === Public Folder ===
-// Name inside params can be anything.
-// Anything put inside this folder will be public and can be accessed by the user
-app.use(express.static('public'))
-// If we put styles.css inisde public folder, link tag should work to reference to the style.css file
+// // === Public Folder ===
+// // Name inside params can be anything.
+// // Anything put inside this folder will be public and can be accessed by the user
+// app.use(express.static('public'))
+// // If we put styles.css inisde public folder, link tag should work to reference to the style.css file
 
 // Data parser, takes URL encoded data converts into an  object (Takes data from form object)  This can be from forms
 app.use(express.urlencoded({extended: true}))
@@ -41,7 +41,6 @@ app.use(express.urlencoded({extended: true}))
 // === Routes ===
 // We can get it from the routes file
 
-const pages = require('./routes/pages')
 
 // Whenever the root is hit it will go to pages.js to see which route is being hit 
 app.use(pageRoutes);
@@ -50,7 +49,6 @@ app.use(pageRoutes);
 //     res.render("index",{
 //         title: "Shopping List"
 //     });
-
 
 
 //     // res.redirect('blogs')

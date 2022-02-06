@@ -21,7 +21,7 @@ const stripe = Stripe('sk_test_51K5LIQJ2poMPNLhqOW4C1XifJeJlSbYgEWjiwaVIIRY6TZTo
 
 var jsonParser = bodyParser.json()
 
-// Default route
+// Default route 
 router.get("/",(req,res)=>{
    
     // Item Model, find all documents in shops collections
@@ -76,8 +76,8 @@ router.post("/add-to-cart", (req,res)=>{
         console.log(response);
         console.log("hi")
         Cart.save(response)
-        console.log(Cart.getCart());
-        res.end("saved ")
+        console.log(Cart.getCart());    
+
 
     })
 
@@ -144,8 +144,10 @@ router.post("/create-checkout-session",jsonParser, async(req,res)=>{
 
         })
         console.log("i am executed here ")
-        // Delete from database once a successful payment is made 
-        res.json({ url: session.url })
+        //  Session URL is being sent to the front-end side. Once session is being fulfilled, get the link and respond it back to the front-end side
+
+
+            res.json({ url: session.url })
         
     }
     catch(e){
